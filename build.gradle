@@ -1,0 +1,55 @@
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+apply plugin: 'eclipse'
+
+def version='1.0-beta'
+
+if(project.hasProperty('build.version')){
+	version=project.ext['build.version']
+}
+
+//gradle build时，指定jar的入口
+springBoot{ mainClass='com.hengbao.Application' }
+
+buildscript {
+	repositories { maven { url 'http://repo2.maven.org/maven2/' } }
+	//指定springboot的版本，其它springboot会保持与spring-boot-gradle-plugin的相同
+	dependencies { classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.5.RELEASE") }
+}
+
+repositories { maven { url 'http://repo2.maven.org/maven2/' } }
+//编译目录
+buildDir = 'build/gradle'
+
+jar{
+	baseName = 'cloud'
+	manifest{
+		attributes("Manifest-Version" : version,
+		"Implementation-Title": "Hengbao TMS",
+		"Implementation-Vendor": "Hengbao Inc.",
+		"Implementation-Version": version
+		)
+	}
+}
+
+configurations{
+	providedRuntime
+}
+
+dependencies {
+	compile("org.springframework.boot:spring-boot-starter-logging")
+//	compile("org.springframework.cloud:spring-cloud-starter-eureka:1.0+")
+	compile("org.springframework.cloud:spring-cloud-starter-eureka:1.1.5+")
+	compile("org.springframework.cloud:spring-cloud-starter-ribbon")
+	
+	compile("com.google.guava:guava:18.0+")
+	compile("org.roboguice:roboguice:2.0+")
+	compile("com.netflix.servo:servo-core:0.12+")
+	
+	compile("com.netflix.hystrix:hystrix-javanica:1.5.3")
+
+	testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+//中文字符集设置
+[compileJava, javadoc, compileTestJava]*.options*.encoding = 'UTF-8'

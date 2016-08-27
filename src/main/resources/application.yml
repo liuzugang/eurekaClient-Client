@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: default
+  application:
+    name: test-client
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetchRegistry: true
+  instance:
+    leaseRenewalIntervalInSeconds: 30
+    preferIpAddress: true
+    metadataMap:
+      instanceId: ${server.port}
+
+server:
+  port: 3333
